@@ -32,35 +32,21 @@ def callback_inline(call):
 @bot.message_handler(content_types=['text'])
 def search_product(message):
     url = f'https://www.wildberries.ru/catalog/0/search.aspx?search={message.text}'
-    # driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
     driver = webdriver.Edge(executable_path='D:\edgedriver\msedgedriver.exe')
-    # service = Service(executable_path='D:\chromedriver\chromedriver.exe')
-    # driver = webdriver.Chrome(service=service)
-    # driver = webdriver.Chrome(r"D:\chromedriver\chromedriver.exe")
-    driver.implicitly_wait(30)
     driver.get(url)
-    soup = BeautifulSoup(driver.switch_to.active_element,'lxml')
-    driver.quit()
-    temp = soup.find('div', {"id" : "app"})
-    print(temp)
-    # driver.get(url)
-    # driver.implicitly_wait(10)
-    # contents = driver.find_element(By.ID, "app")
-    # print(contents)
-    # soup = BeautifulSoup(driver.page_source, "html.parser")
-    # print("Создался суп")
-    # soup.text.replace("\u20bd", " ")
-    # soup.encode("ascii", "ignore")
-    # soup.decode('utf-8')
-    # print(soup)
-    # #.find('div', {"id" : "app"}).find('div').find('div', {"id" : "catalog"})
-    # temp = soup.find_all('div', {"id" : "catalog"})#.find('div', {"class" : "product-card-list"}).find('article')
-    # temp = soup.find('div', {"id" : "app"})
-    # temp.decode("utf-8")
-    # print('Before errors')
-    # temp.text.replace(u'\u20bd', "")
-    # print(temp)
-    # bot.send_message(message.chat.id, f'{temp}')
+    driver.implicitly_wait(30)
+    elements = driver.find_element(By.ID, 'app') 
+    card_elements = elements.find_elements(By.CLASS_NAME, "product-card__link")
+    titles = []
+    links = []
+
+    for product in card_elements:
+        product_title = product.get_attribute("product-card__name")
+        titles.append(product_title)
+        product_link = product.get_attribute("href")
+        links.append(product_link)
+    
+    # print(links)
 
 
 # ПОМОЩЬ ПОЛЬЗОВАТЕЛЮ
